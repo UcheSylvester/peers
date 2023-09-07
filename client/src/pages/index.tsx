@@ -86,12 +86,12 @@ const Home: NextPage = () => {
 
       <Group>
         <Stack spacing={5}>
-          <Title order={3}>Local</Title>
+          <Title order={3}>Caller</Title>
           <Box className={classes.video} ref={localVideoRef} component="video" autoPlay />
         </Stack>
 
         <Stack spacing={5}>
-          <Title order={3}>Remote</Title>
+          <Title order={3}>Callee</Title>
           <Box className={classes.video} ref={remoteVideoRef} component="video" autoPlay />
         </Stack>
 
