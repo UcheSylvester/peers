@@ -2,6 +2,14 @@ import { Box, Button, Group, Stack, Textarea, Title, createStyles } from "@manti
 import { NextPage } from "next"
 import { useEffect, useRef } from "react"
 
+import io from 'socket.io-client'
+
+const socket = io('http://localhost:8080/webRTCPeers', {
+  path: '/webrtc'
+})
+
+// const socket = io('/webrtc')
+
 const Home: NextPage = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null)
   const remoteVideoRef = useRef<HTMLVideoElement>(null)
@@ -41,6 +49,13 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
+
+
+    socket.on('connection-success', (data) => {
+      console.log('connection successful', {data})
+    })
+
+
     getUserMedia()
 
     const _pc = new RTCPeerConnection()
