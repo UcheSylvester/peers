@@ -1,5 +1,15 @@
 import {CSSObject, MantineThemeOverride} from '@mantine/core'
 
+export const globalStyles = (): CSSObject => ({
+  '*, *::before, *::after': {
+    boxSizing: 'border-box',
+  },
+  body: {
+    margin: 0,
+    padding: 0,
+  },
+});
+
 const fontFamily =
   'Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji';
 
@@ -36,16 +46,9 @@ export const themeOverride: MantineThemeOverride = {
       lg: 2,
     },
   },
+  globalStyles
 };
 
-export const globalStyles: CSSObject = {
-  '*, *::before, *::after': {
-    boxSizing: 'border-box',
-  },
-  body: {
-    margin: 0,
-    padding: 0,
-  },
-};
+
 
 
