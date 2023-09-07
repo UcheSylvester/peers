@@ -8,8 +8,6 @@ const socket = io('http://localhost:8080/webRTCPeers', {
   path: '/webrtc'
 })
 
-// const socket = io('/webrtc')
-
 const Home: NextPage = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null)
   const remoteVideoRef = useRef<HTMLVideoElement>(null)
@@ -49,7 +47,6 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-
 
     socket.on('connection-success', (data) => {
       console.log('connection successful', {data})
