@@ -1,4 +1,4 @@
-import { AppHeader } from "@/App"
+import { AppHeader } from "@/features/App"
 import { AppShell, Box, createStyles } from "@mantine/core"
 
 interface AppLayoutProps {

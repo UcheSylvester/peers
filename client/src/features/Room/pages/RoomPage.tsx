@@ -2,7 +2,7 @@ import { VideoPlayer } from "@/components/VideoPlayer"
 import { StreamType } from "@/types"
 import {  Button, Group, Stack, Textarea, Title } from "@mantine/core"
 import { PeerConnectionsProvider, usePeerConnectionsContext } from "../containers"
-import { AppLayout } from "@/App/containers"
+import { AppLayout } from "@/features/App"
 
 export interface RoomPageProps { }
 
