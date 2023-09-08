@@ -13,6 +13,7 @@ const Home: NextPage = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null)
   const pcRef = useRef<RTCPeerConnection | null>(null)
   const textRef = useRef<HTMLTextAreaElement>(null)
+  const candidates = useRef<RTCIceCandidate[]>([])
   const {classes} = useStyles()
 
 
@@ -33,7 +34,10 @@ const Home: NextPage = () => {
   }
 
   const handleIceCandidates = (event: RTCPeerConnectionIceEvent) => {
-    console.log('icecandidate', {event, candidate: JSON.stringify(event.candidate)})
+    if(event.candidate) {
+      sendToPeer('icecandidate', {candidate: event.candidate})
+      // console.log('icecandidate', {event, candidate: JSON.stringify(event.candidate)})
+    }
   }
 
   const handleIceConnectionsStateChange = (event: Event) => {
@@ -41,7 +45,7 @@ const Home: NextPage = () => {
   }
 
   const handleTrack = (event: RTCTrackEvent) => {
-    console.log('ontrack',{event})
+    // console.log('ontrack',{event})
     if(!remoteVideoRef.current) return
     remoteVideoRef.current.srcObject = event.streams[0]
   }
@@ -50,6 +54,30 @@ const Home: NextPage = () => {
 
     socket.on('connection-success', (data) => {
       console.log('connection successful', {data})
+    })
+
+    socket.on('sdp', async (data) => {
+      try {
+        console.log('recieving sdp', {data})
+        // set remote description as soon as we recieve sdp from the server
+       await  pcRef.current?.setRemoteDescription(new RTCSessionDescription(data.sdp))
+        textRef.current!.value = JSON.stringify(data.sdp)
+        
+      } catch (error) {
+        console.log({error})
+        
+      }
+    })
+
+    socket.on('icecandidate', async (data) => {
+      try {
+        console.log('recieving candidate', {data})
+        // set candidates as soon as we recieve them from the server
+        await pcRef.current?.addIceCandidate(data.candidate)
+        
+      } catch (error) {
+        console.log({error})
+      }
     })
 
 
@@ -64,19 +92,36 @@ const Home: NextPage = () => {
 
   }, [])
 
+  const sendToPeer = (eventType: string, payload: unknown) => {
+    socket.emit(eventType, payload)
+  }
+    
+  
+
+  const processSDP = async (sdp?: RTCSessionDescriptionInit) => {
+    if(!sdp) return
+
+    console.log({sdp: JSON.stringify(sdp)})
+    await pcRef.current?.setLocalDescription(sdp)
+
+    // send sdp to server
+    sendToPeer('sdp', { sdp })
+  }
+
   const createOffer = async () => {
     const offer = await pcRef.current?.createOffer({
       offerToReceiveAudio: true,
       offerToReceiveVideo: true
     })
-    await pcRef.current?.setLocalDescription(offer)
-    console.log({offer: JSON.stringify(offer)})
+    processSDP(offer)
   }
 
   const createAnswer = async () => {
-    const answer = await pcRef.current?.createAnswer()
-    pcRef.current?.setLocalDescription(answer)
-    console.log({answer: JSON.stringify(answer)})
+    const answer = await pcRef.current?.createAnswer({
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: true
+    })
+    processSDP(answer)
   }
 
   const setRemoteDescription = async () => {
@@ -87,8 +132,11 @@ const Home: NextPage = () => {
   }
 
   const addCandidate = async () => {
-    const candidate = JSON.parse(textRef.current?.value || '')
-    await pcRef.current?.addIceCandidate(candidate)
+    // const candidate = JSON.parse(textRef.current?.value || '')
+    // await pcRef.current?.addIceCandidate(candidate)
+    candidates.current.forEach(candidate => {
+      pcRef.current?.addIceCandidate(candidate)
+    })
   }
 
   

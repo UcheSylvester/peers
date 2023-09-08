@@ -22,25 +22,32 @@ app.get('/', (req, res) => {
 })
 
 
-
 const webRTCNamespace = io.of('/webRTCPeers')
   
 webRTCNamespace.on('connection', (socket) => {
   console.log('a user connected', {id: socket.id});
 
+  socket.emit('connection-success', {
+    status: 'connection-success',
+    socketId: socket.id
+  })
+
+  socket.on('sdp', data => {
+    console.log({data})
+    socket.broadcast.emit('sdp', data)
+  })
+
+  socket.on('icecandidate', data => {
+    console.log({data})
+    socket.broadcast.emit('icecandidate', data)
+  })
+
   socket.on('disconnect', () => {
     console.log('user disconnected', {id: socket.id});
   });
+
 });
 
-// io.on('connection', (socket) => {
-//   console.log('a user connected', {id: socket.id});
-  
-
-//   // socket.on('disconnect', () => {
-//   //   console.log('user disconnected', {socket});
-//   // });
-// });
 
 
 httpServer.listen(port, () => console.log(`Example app listening on port ${port}!`))
