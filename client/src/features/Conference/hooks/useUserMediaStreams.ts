@@ -48,7 +48,6 @@ export const useUserMediaStreams = ({
     tracks.forEach((track) => {
       if(track.kind === type) track.enabled = !track.enabled;
     })
-    console.log({tracks})
   }
 
   const toggleLocalStreamFeatures = (type: keyof StreamFeatures) => {

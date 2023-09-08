@@ -28,7 +28,6 @@ export const VideoPlayer = ({ stream, streamType, ratio, className,...otherProps
           ref={ref} 
           component="video" 
           autoPlay 
-          muted 
           {...otherProps}
         />
       </AspectRatio>

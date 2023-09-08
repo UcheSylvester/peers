@@ -43,7 +43,6 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
   }
 
   const handleTrack = (event: RTCTrackEvent) => {
-    console.log('handletrack', {event})
     setStreams((current) => ({
       ...current,
       local: current?.local,
@@ -100,8 +99,6 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
     _pc.addEventListener('icecandidate', onIceCandidate)
     _pc.addEventListener('iceconnectionstatechange', onIceConnectionsStateChange)
     _pc.addEventListener('track', handleTrack)
-
-    console.log('pcRef', pcRef.current)
 
     pcRef.current = _pc
 

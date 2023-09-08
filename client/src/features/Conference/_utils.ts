@@ -3,7 +3,7 @@ import { User } from "@/types"
 
 export const processSDP = async (peerConnection: RTCPeerConnection | null, sdp?: RTCSessionDescriptionInit) => {
   if(!sdp) return
-  console.log({sdp})
+  // console.log({sdp})
   await peerConnection?.setLocalDescription(sdp)
 
   // send sdp to server
