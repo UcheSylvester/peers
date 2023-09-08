@@ -15,8 +15,8 @@ const fontFamily =
 
 export const themeOverride: MantineThemeOverride = {
   defaultRadius: 0,
-  primaryColor: 'black',
   fontFamily,
+  // colorScheme: 'dark',
   headings: {
     fontFamily,
   },
@@ -38,6 +38,8 @@ export const themeOverride: MantineThemeOverride = {
       '#01010a',
     ],
   },
+  // primaryColor: 'teal',
+  primaryColor: 'black',
   primaryShade: 9,
   other: {
     letterSpacing: {

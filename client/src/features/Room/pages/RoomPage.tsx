@@ -2,13 +2,16 @@ import { VideoPlayer } from "@/components/VideoPlayer"
 import { StreamType } from "@/types"
 import {  Button, Group, Stack, Textarea, Title } from "@mantine/core"
 import { PeerConnectionsProvider, usePeerConnectionsContext } from "../containers"
+import { AppLayout } from "@/App/containers"
 
 export interface RoomPageProps { }
 
 export const RoomPage = () => {
   return (
     <PeerConnectionsProvider>
-      <RoomPageContent />
+      <AppLayout>
+        <RoomPageContent />
+      </AppLayout>
     </PeerConnectionsProvider>
   )
 }

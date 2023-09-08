@@ -7,7 +7,7 @@ interface AppProviderProps {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <MantineProvider theme={themeOverride} withGlobalStyles withNormalizeCSS>
+    <MantineProvider theme={themeOverride} withGlobalStyles  withNormalizeCSS>
       {children}
     </MantineProvider>
   )
