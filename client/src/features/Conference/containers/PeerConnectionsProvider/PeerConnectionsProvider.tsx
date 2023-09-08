@@ -3,6 +3,7 @@ import { useUserMediaStreams } from "../../hooks";
 import Socket from "@/lib/socket-io";
 import { StreamFeatures, Streams } from "@/types";
 import { processSDP, sendToPeer } from "../../_utils";
+import { useRouter } from "next/router";
 
 interface PeerConnectionsContextValue {
   createAnswer: () => void;
@@ -26,7 +27,7 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
   const [callVisible, setCallVisible] = useState(true)
   const [answerVisible, setAnswerVisible] = useState(false)
   const [status, setStatus] = useState('make a call now')
-
+  const router = useRouter()
 
   const {streams, getUserMedia, setStreams, localStreamFeatures, toggleLocalStreamFeatures} = useUserMediaStreams({onUserMediaCallback: (stream) => {
     stream.getTracks().forEach(track => pcRef.current?.addTrack(track, stream))
@@ -54,7 +55,6 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
     Socket.on('connection-success', (data) => {
       console.log('connection successful', {sockID: data.socketId, sid: Socket.id})
       // set User
-
     })
 
     Socket.on('sdp', async (data) => {
@@ -136,6 +136,8 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
       local: current?.local,
       remote: undefined,
     }))
+    router.push('/')
+    router.reload()
   }
 
   const endCall = () => {
