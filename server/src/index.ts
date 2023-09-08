@@ -25,7 +25,8 @@ app.get('/', (req, res) => {
 const webRTCNamespace = io.of('/webRTCPeers')
   
 webRTCNamespace.on('connection', (socket) => {
-  console.log('a user connected', {id: socket.id});
+  console.log(`a user connected ${socket.id}`);
+  // TODO: save this socket id to the user in a database
 
   socket.emit('connection-success', {
     status: 'connection-success',
@@ -41,7 +42,7 @@ webRTCNamespace.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected', {id: socket.id});
+    console.log(`user disconnected ${socket.id}`);
   });
 });
 
