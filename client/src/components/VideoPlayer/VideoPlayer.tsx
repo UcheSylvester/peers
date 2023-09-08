@@ -19,8 +19,6 @@ export const VideoPlayer = ({ stream, streamType, ratio, className,...otherProps
     }
   }, [stream])
 
-  if(!stream) return null
-
   return (
     <Stack className={classes.root}>
       <Text className={classes.name}>{streamType}</Text>

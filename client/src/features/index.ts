@@ -1,2 +1,2 @@
-export * from './Room'
+export * from './Conference'
 export * from './App'
