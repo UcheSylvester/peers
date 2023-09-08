@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useUserMediaStreams } from "../../hooks";
 import Socket from "@/lib/socket-io";
-import { Streams } from "@/types";
+import { StreamFeatures, Streams } from "@/types";
 import { processSDP, sendToPeer } from "../../_utils";
 
 interface PeerConnectionsContextValue {
@@ -12,6 +12,8 @@ interface PeerConnectionsContextValue {
   status: string;
   streams: Streams | undefined;
   endCall: () => void;
+  localStreamFeatures: StreamFeatures
+  toggleLocalStreamFeatures: (type: keyof StreamFeatures) => void;
 }
 
 const PeerConnecctionsContext = createContext<PeerConnectionsContextValue>({} as PeerConnectionsContextValue);
@@ -26,7 +28,7 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
   const [status, setStatus] = useState('make a call now')
 
 
-  const {streams, getUserMedia, setStreams} = useUserMediaStreams({onUserMediaCallback: (stream) => {
+  const {streams, getUserMedia, setStreams, localStreamFeatures, toggleLocalStreamFeatures} = useUserMediaStreams({onUserMediaCallback: (stream) => {
     stream.getTracks().forEach(track => pcRef.current?.addTrack(track, stream))
   }})
 
@@ -152,8 +154,9 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
       answerVisible,
       status,
       streams,
-      endCall
-
+      endCall,
+      localStreamFeatures,
+      toggleLocalStreamFeatures,
     }}>
       {children}
     </PeerConnecctionsContext.Provider>

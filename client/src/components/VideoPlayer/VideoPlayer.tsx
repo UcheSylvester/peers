@@ -9,7 +9,7 @@ interface VideoPlayerProps extends BoxProps {
 }
 
 
-export const VideoPlayer = ({stream, streamType, ratio, className,...otherProps}: VideoPlayerProps) => {
+export const VideoPlayer = ({ stream, streamType, ratio, className,...otherProps }: VideoPlayerProps) => {
   const ref = useRef<HTMLVideoElement>(null)
   const {classes, cx} = useStyles()
 
@@ -20,7 +20,6 @@ export const VideoPlayer = ({stream, streamType, ratio, className,...otherProps}
   }, [stream])
 
   if(!stream) return null
-
 
   return (
     <Stack className={classes.root}>

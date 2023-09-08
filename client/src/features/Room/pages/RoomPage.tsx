@@ -1,6 +1,6 @@
 import { VideoPlayer } from "@/components/VideoPlayer"
 import { StreamType } from "@/types"
-import {  Group, Stack, Title } from "@mantine/core"
+import {  Group, Stack } from "@mantine/core"
 import { ActionBar, PeerConnectionsProvider, usePeerConnectionsContext } from "../containers"
 import { AppLayout } from "@/features/App"
 import { useMemo } from "react"
@@ -19,7 +19,7 @@ export const RoomPage = () => {
 
 const RoomPageContent = () => {
 
-  const {streams, status} = usePeerConnectionsContext()
+  const {streams} = usePeerConnectionsContext()
 
   const VideoAspectRatio = useMemo(() => streams?.remote ? 16 / 14 : 16 / 7.5, [streams?.remote])
 
@@ -32,12 +32,6 @@ const RoomPageContent = () => {
     </Group>
 
     <ActionBar />
-
-    {/* <Group>
-      {renderButtons()}
-    </Group> */}
-
-    <Title order={4}>{status}</Title>
 
   </Stack>
   )

@@ -8,6 +8,11 @@ export enum StreamType {
   REMOTE = 'remote'
 }
 
+export interface StreamFeatures {
+  audio: {enabled: boolean}
+  video: {enabled: boolean}
+}
+
 export interface Streams {
   local: MediaStream | undefined
   remote: MediaStream | undefined
