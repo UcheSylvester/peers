@@ -1,3 +1,4 @@
+import { Link } from "@/components/Link"
 import { Box, Button, Stack, Text, Title, createStyles } from "@mantine/core"
 
 export const HomeLeftSide = () => {
@@ -18,7 +19,9 @@ export const HomeLeftSide = () => {
         to connect with your peers in real time.
       </Text>
 
-      <Button size={'xl'} className={classes.button}>Peer Up!</Button>
+      <Link href='/conference'>
+        <Button size={'xl'} className={classes.button}>Peer Up!</Button>
+      </Link>
     </Stack>
   )
 }
