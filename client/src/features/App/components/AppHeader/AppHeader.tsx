@@ -1,6 +1,6 @@
 import { Box, createStyles } from "@mantine/core"
-import { HeaderMenu } from "../HeaderMenu"
 import { UserIcon } from "../UserIcon"
+import { BrandLogo } from "@/components/BrandLogo"
 
 export const AppHeader = () => {
   const { classes } = useStyles()
@@ -8,15 +8,15 @@ export const AppHeader = () => {
     <Box component="header" className={classes.root}>
 
       {/* LOGO */}
-      <Box>LOGO</Box>
+      <BrandLogo />
 
 
       {/* NAVIGATION */}
-      <HeaderMenu />
+      {/* <HeaderMenu /> */}
 
 
       {/* USER */}
-      <UserIcon  name={'User'} />
+      <UserIcon />
     </Box>
   )
 }

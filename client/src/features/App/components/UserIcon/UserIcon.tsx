@@ -1,16 +1,20 @@
 import { Avatar, Group, Text } from "@mantine/core"
 
 interface UserIconProps {
-  name: string
+  name?: string
 }
 export const UserIcon = ({name}: UserIconProps) => {
   return (
     <Group>
       <Avatar color="teal" radius="xl">
-        {name.split(' ').map((word) => word[0]).join('')}
+        {(name?.split(' ').map((word) => word[0]).join('') || 'U')}
       </Avatar>
 
-      <Text>{name}</Text>
+      {
+        name && <Text>{name}</Text>
+      }
+
+      
 
     </Group>
   )

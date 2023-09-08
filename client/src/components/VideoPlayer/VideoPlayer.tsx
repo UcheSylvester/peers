@@ -1,5 +1,5 @@
 import { StreamType } from "@/types";
-import { AspectRatio, Box, BoxProps, Stack, Text, createStyles } from "@mantine/core"
+import { AspectRatio, Box, BoxProps, Stack, createStyles } from "@mantine/core"
 import { useEffect, useRef } from "react"
 
 interface VideoPlayerProps extends BoxProps {
@@ -21,7 +21,7 @@ export const VideoPlayer = ({ stream, streamType, ratio, className,...otherProps
 
   return (
     <Stack className={classes.root}>
-      <Text className={classes.name}>{streamType}</Text>
+      {/* <Text className={classes.name}>{streamType}</Text> */}
       <AspectRatio ratio={ratio}>
         <Box 
           className={cx(classes.video, streamType === StreamType.LOCAL ? classes.local : classes.remote,  className)} 
