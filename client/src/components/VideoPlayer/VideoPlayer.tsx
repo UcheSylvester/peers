@@ -21,7 +21,7 @@ export const VideoPlayer = ({stream, streamType, className,...otherProps}: Video
   }, [stream])
   return (
 
-    <Box className={cx(classes.video, streamType === StreamType.LOCAL ? classes.local : classes.remote,  className)} ref={ref} component="video" autoPlay {...otherProps}  />
+    <Box className={cx(classes.video, streamType === StreamType.LOCAL ? classes.local : classes.remote,  className)} ref={ref} component="video" autoPlay muted {...otherProps}  />
   )
 }
 
