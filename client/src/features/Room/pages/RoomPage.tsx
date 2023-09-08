@@ -1,8 +1,9 @@
 import { VideoPlayer } from "@/components/VideoPlayer"
 import { StreamType } from "@/types"
-import {  Button, Group, Stack, Textarea, Title } from "@mantine/core"
-import { PeerConnectionsProvider, usePeerConnectionsContext } from "../containers"
+import {  Group, Stack, Title } from "@mantine/core"
+import { ActionBar, PeerConnectionsProvider, usePeerConnectionsContext } from "../containers"
 import { AppLayout } from "@/features/App"
+import { useMemo } from "react"
 
 export interface RoomPageProps { }
 
@@ -18,54 +19,26 @@ export const RoomPage = () => {
 
 const RoomPageContent = () => {
 
-  const {callVisible, createAnswer, createOffer, answerVisible, streams, textRef, status} = usePeerConnectionsContext()
+  const {streams, status} = usePeerConnectionsContext()
 
-  const renderButtons = ()=> {
-    if(callVisible) {
-      return (
-        <Button fullWidth={false} onClick={createOffer}>
-          Call
-        </Button>
-      )
-    }
-
-    if(answerVisible) {
-      return (
-        <Button fullWidth={false} onClick={createAnswer}>
-          Answer
-        </Button>
-      )
-    }
-    return null
-  }
-
+  const VideoAspectRatio = useMemo(() => streams?.remote ? 16 / 14 : 16 / 7.5, [streams?.remote])
 
   return (
-    <Stack>
-    <Title>Home</Title>
+    <Stack spacing={40}>
 
-    <Group>
-      <Stack spacing={5}>
-        <Title order={3}>Local</Title>
-        {/* <Box className={cx(classes.video, classes.caller)} ref={localVideoRef} component="video" autoPlay  /> */}
-        <VideoPlayer stream={streams?.local} streamType={StreamType.LOCAL} />
-      </Stack>
-
-      <Stack spacing={5}>
-        <Title order={3}>Remote</Title>
-        {/* <Box className={classes.video} ref={remoteVideoRef} component="video" autoPlay /> */}
-        <VideoPlayer stream={streams?.remote} streamType={StreamType.REMOTE} />
-      </Stack>
-
+    <Group noWrap>
+      <VideoPlayer ratio={VideoAspectRatio} stream={streams?.local} streamType={StreamType.LOCAL} />
+      <VideoPlayer ratio={VideoAspectRatio} stream={streams?.remote} streamType={StreamType.REMOTE} />
     </Group>
 
-    <Group>
+    <ActionBar />
+
+    {/* <Group>
       {renderButtons()}
-    </Group>
+    </Group> */}
 
     <Title order={4}>{status}</Title>
 
-    <Textarea ref={textRef} />
   </Stack>
   )
 }

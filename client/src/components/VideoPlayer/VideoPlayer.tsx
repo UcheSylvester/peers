@@ -1,16 +1,15 @@
 import { StreamType } from "@/types";
-import { Box, BoxProps, createStyles } from "@mantine/core"
+import { AspectRatio, Box, BoxProps, Stack, Text, createStyles } from "@mantine/core"
 import { useEffect, useRef } from "react"
-
-
-
 
 interface VideoPlayerProps extends BoxProps {
   stream: MediaStream | undefined;
-  streamType: StreamType
+  streamType: StreamType,
+  ratio: number,
 }
 
-export const VideoPlayer = ({stream, streamType, className,...otherProps}: VideoPlayerProps) => {
+
+export const VideoPlayer = ({stream, streamType, ratio, className,...otherProps}: VideoPlayerProps) => {
   const ref = useRef<HTMLVideoElement>(null)
   const {classes, cx} = useStyles()
 
@@ -19,24 +18,52 @@ export const VideoPlayer = ({stream, streamType, className,...otherProps}: Video
       ref.current.srcObject = stream 
     }
   }, [stream])
-  return (
 
-    <Box className={cx(classes.video, streamType === StreamType.LOCAL ? classes.local : classes.remote,  className)} ref={ref} component="video" autoPlay muted {...otherProps}  />
+  if(!stream) return null
+
+
+  return (
+    <Stack className={classes.root}>
+      <Text className={classes.name}>{streamType}</Text>
+      <AspectRatio ratio={ratio}>
+        <Box 
+          className={cx(classes.video, streamType === StreamType.LOCAL ? classes.local : classes.remote,  className)} 
+          ref={ref} 
+          component="video" 
+          autoPlay 
+          muted 
+          {...otherProps}
+        />
+      </AspectRatio>
+    </Stack>
   )
 }
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
+  root: {
+    width: '100%',
+    borderRadius: 10,
+    position: 'relative',
+  },
+  name: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
+    padding: 10,
+    color: 'white',
+    background: 'rgba(0,0,0,0.5)',
+    borderRadius: '10px 0 10px 0',
+  },
   video: {
-    border: '1px solid red',
-    height: 300,
-    width: 500,
-    objectFit: 'cover',
-    transform: 'rotateY(180deg)'
+    // objectFit: 'cover',
+    transform: 'rotateY(180deg)',
+    borderRadius: 10,
+    boxShadow: theme.shadows.sm,
+    // height: '80vh'
   },
   local: {
-    border: '1px solid green'
   },
   remote: {
-    border: '1px solid blue'
   }
 }))

@@ -27,7 +27,9 @@ export const AppLayout = ({children}: AppLayoutProps) => {
 
 const useStyles = createStyles(() => ({
   body: {
-
+    paddingTop: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   container: {
     height: '100%',

@@ -41,8 +41,13 @@ webRTCNamespace.on('connection', (socket) => {
     socket.broadcast.emit('icecandidate', data)
   })
 
+  socket.on('end-call', data => {
+    socket.broadcast.emit('end-call', data)
+  })
+
   socket.on('disconnect', () => {
     console.log(`user disconnected ${socket.id}`);
+    socket.broadcast.emit('user-disconnected', {socketId: socket.id})
   });
 });
 

@@ -2,14 +2,13 @@ import { Streams } from "@/types";
 import { useState } from "react";
 
 const defaultConstraints: MediaStreamConstraints = {
-  audio: false,
+  audio: true,
   video: true,
 }
 
 interface UseUserMediaStreamsArgs {
   constraints?: MediaStreamConstraints;
   onUserMediaCallback?: (stream: MediaStream) => void;
-  peerCOnnection?: RTCPeerConnection;
 }
 export const useUserMediaStreams = ({
   constraints,

@@ -10,8 +10,8 @@ interface PeerConnectionsContextValue {
   callVisible: boolean;
   answerVisible: boolean;
   status: string;
-  textRef: React.RefObject<HTMLTextAreaElement>;
   streams: Streams | undefined;
+  endCall: () => void;
 }
 
 const PeerConnecctionsContext = createContext<PeerConnectionsContextValue>({} as PeerConnectionsContextValue);
@@ -21,7 +21,6 @@ interface PeerConnectionsProviderProps {
 }
 export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps) => {
   const pcRef = useRef<RTCPeerConnection | null>(null)
-  const textRef = useRef<HTMLTextAreaElement>(null)
   const [callVisible, setCallVisible] = useState(true)
   const [answerVisible, setAnswerVisible] = useState(false)
   const [status, setStatus] = useState('make a call now')
@@ -34,7 +33,6 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
   const onIceCandidate = (event: RTCPeerConnectionIceEvent) => {
     if(event.candidate) {
       sendToPeer('icecandidate', {candidate: event.candidate})
-      // console.log('icecandidate', {event, candidate: JSON.stringify(event.candidate)})
     }
   }
 
@@ -43,9 +41,7 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
   }
 
   const handleTrack = (event: RTCTrackEvent) => {
-    console.log({event})
-    // if(!remoteVideoRef.current) return
-    // remoteVideoRef.current.srcObject = event.streams[0]
+    console.log('handletrack', {event})
     setStreams((current) => ({
       ...current,
       local: current?.local,
@@ -65,7 +61,6 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
         console.log('recieving sdp', {data})
         // set remote description as soon as we recieve sdp from the server
        await  pcRef.current?.setRemoteDescription(new RTCSessionDescription(data.sdp))
-        textRef.current!.value = JSON.stringify(data.sdp)
 
         if(data.sdp.type === 'offer') {
           setCallVisible(false)
@@ -81,6 +76,11 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
       }
     })
 
+    Socket.on('end-call', terminateCall)
+
+    Socket.on('user-disconnected', () => {
+    })
+
     Socket.on('icecandidate', async (data) => {
       try {
         console.log('recieving candidate', {data})
@@ -92,13 +92,14 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
       }
     })
 
-
     getUserMedia()
 
     const _pc = new RTCPeerConnection()
     _pc.addEventListener('icecandidate', onIceCandidate)
     _pc.addEventListener('iceconnectionstatechange', onIceConnectionsStateChange)
     _pc.addEventListener('track', handleTrack)
+
+    console.log('pcRef', pcRef.current)
 
     pcRef.current = _pc
 
@@ -127,6 +128,22 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
     setStatus('call answered')
   }
 
+  const terminateCall = () => {
+    pcRef.current?.close()
+    setAnswerVisible(false)
+    setCallVisible(true)
+    setStreams((current) => ({
+      ...current,
+      local: current?.local,
+      remote: undefined,
+    }))
+  }
+
+  const endCall = () => {
+    Socket.emit('end-call', {socketId: Socket.id})
+    terminateCall()
+  }
+
   return (
     <PeerConnecctionsContext.Provider value={{
       createAnswer,
@@ -134,8 +151,8 @@ export const PeerConnectionsProvider = ({children}: PeerConnectionsProviderProps
       callVisible,
       answerVisible,
       status,
-      textRef,
-      streams
+      streams,
+      endCall
 
     }}>
       {children}

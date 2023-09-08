@@ -1,7 +1,6 @@
 export interface User {
-  // id: string
+  id: string
   name: string
-  socketId: string
 }
 
 export enum StreamType {
@@ -12,4 +11,9 @@ export enum StreamType {
 export interface Streams {
   local: MediaStream | undefined
   remote: MediaStream | undefined
+}
+
+export interface Option {
+  label: string
+  value: string
 }
