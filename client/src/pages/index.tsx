@@ -1,6 +1,6 @@
 import { Box, Button, Group, Stack, Textarea, Title, createStyles } from "@mantine/core"
 import { NextPage } from "next"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import io from 'socket.io-client'
 
@@ -15,7 +15,9 @@ const Home: NextPage = () => {
   const textRef = useRef<HTMLTextAreaElement>(null)
   const candidates = useRef<RTCIceCandidate[]>([])
   const {classes} = useStyles()
-
+  const [callVisible, setCallVisible] = useState(true)
+  const [answerVisible, setAnswerVisible] = useState(false)
+  const [status, setStatus] = useState('make a call now')
 
   const getUserMedia = async () => {
     try {
@@ -62,6 +64,15 @@ const Home: NextPage = () => {
         // set remote description as soon as we recieve sdp from the server
        await  pcRef.current?.setRemoteDescription(new RTCSessionDescription(data.sdp))
         textRef.current!.value = JSON.stringify(data.sdp)
+
+        if(data.sdp.type === 'offer') {
+          setCallVisible(false)
+          setAnswerVisible(true)
+          setStatus('incoming call...')
+
+        } else if(data.sdp.type === 'answer') {
+          setStatus('call answered')
+        }
         
       } catch (error) {
         console.log({error})
@@ -114,6 +125,10 @@ const Home: NextPage = () => {
       offerToReceiveVideo: true
     })
     processSDP(offer)
+
+    setCallVisible(false)
+    setStatus('calling...')
+
   }
 
   const createAnswer = async () => {
@@ -122,6 +137,8 @@ const Home: NextPage = () => {
       offerToReceiveVideo: true
     })
     processSDP(answer)
+    setAnswerVisible(false)
+    setStatus('call answered')
   }
 
   const setRemoteDescription = async () => {
@@ -137,6 +154,28 @@ const Home: NextPage = () => {
     candidates.current.forEach(candidate => {
       pcRef.current?.addIceCandidate(candidate)
     })
+  }
+
+  const renderButtons = ()=> {
+    if(callVisible) {
+      return (
+        <Button fullWidth={false} onClick={createOffer}>
+          Call
+        </Button>
+      )
+    }
+
+    if(answerVisible) {
+      return (
+        <Button fullWidth={false} onClick={createAnswer}>
+          Answer
+        </Button>
+      )
+    }
+
+    return null
+
+
   }
 
   
@@ -158,13 +197,10 @@ const Home: NextPage = () => {
       </Group>
 
       <Group>
-        <Button fullWidth={false} onClick={createOffer}>
-          Create Offer
-        </Button>
-        <Button fullWidth={false} onClick={createAnswer}>
-          Create Answer
-        </Button>
+        {renderButtons()}
       </Group>
+
+      <Title order={4}>{status}</Title>
 
       <Textarea ref={textRef} />
 

@@ -33,19 +33,16 @@ webRTCNamespace.on('connection', (socket) => {
   })
 
   socket.on('sdp', data => {
-    console.log({data})
     socket.broadcast.emit('sdp', data)
   })
 
   socket.on('icecandidate', data => {
-    console.log({data})
     socket.broadcast.emit('icecandidate', data)
   })
 
   socket.on('disconnect', () => {
     console.log('user disconnected', {id: socket.id});
   });
-
 });
 
 
