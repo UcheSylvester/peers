@@ -1,6 +1,6 @@
-import { ConferencePage } from "@/features";
+import { HomePage } from "@/features";
 
-export default ConferencePage
+export default HomePage
 
 /**Steps
 * 1. create a peer connection

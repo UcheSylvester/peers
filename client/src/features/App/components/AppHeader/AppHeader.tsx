@@ -26,7 +26,10 @@ const useStyles = createStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: `20px`
+    paddingBottom: 20,
+    paddingTop: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
   }
 }))
 

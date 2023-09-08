@@ -23,7 +23,7 @@ const ConferencePageContent = () => {
   const VideoAspectRatio = useMemo(() => streams?.remote ? 16 / 14 : 16 / 7.5, [streams?.remote])
 
   return (
-    <Stack spacing={40}>
+    <Stack mt={20} spacing={40}>
 
     <Group noWrap>
       <VideoPlayer ratio={VideoAspectRatio} stream={streams?.local} streamType={StreamType.LOCAL} />
